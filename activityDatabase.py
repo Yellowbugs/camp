@@ -14,7 +14,9 @@ def addActivity(name,size,levels,day,startTime,endTime):
 def viewAllActivities():
     return  c.execute("select * from activity order by name ASC").fetchall()
 
-def searchActivity(name,level,day):
-    return c.execute("select * from activity where name like (?) order by name ASC",("%"+name+"%",)).fetchall()
-
+def searchActivity(name,available,levels,days):
+    if available:
+        return c.execute("select * from activity where name like (?) and spotsLeft > 0 and (levels like (?) or levels like (?) or levels like (?)) and (day like (?) or day like (?) or day like (?) or day like (?) or day like (?)) order by name ASC",("%"+name+"%","%"+levels[0]+"%","%"+levels[1]+"%","%"+levels[2]+"%","%"+days[0]+"%","%"+days[1]+"%","%"+levels[2]+"%","%"+days[3]+"%","%"+days[4]+"%",)).fetchall()
+    else:
+        return c.execute("select * from activity where name like (?) and (levels like (?) or levels like (?) or levels like (?)) and (day like (?) or day like (?) or day like (?) or day like (?) or day like (?)) order by name ASC",("%"+name+"%","%"+levels[0]+"%","%"+levels[1]+"%","%"+levels[2]+"%","%"+days[0]+"%","%"+days[1]+"%","%"+levels[2]+"%","%"+days[3]+"%","%"+days[4]+"%",)).fetchall()
 

@@ -11,7 +11,7 @@ class App(QMainWindow):
 
     def __init__(self):
         super().__init__()
-        self.title = 'Camp Schedular'
+        self.title = 'Camp Scheduler'
         self.left = 250
         self.top = 100
         self.width = 1000
@@ -29,7 +29,6 @@ class MyTableWidget(QWidget):
     def __init__(self, parent):
         super(QWidget, self).__init__(parent)
         self.layout = QVBoxLayout(self)
-
         self.headerFont = QFont()
         self.headerFont.setPixelSize(28)
         self.headerFont.setBold(True)
@@ -301,12 +300,85 @@ class MyTableWidget(QWidget):
         self.viewActivityName.layout.addWidget(self.viewActivityNameLabel)
         self.viewActivityName.layout.addWidget(self.viewActivityNameEntryBox)
 
+        #Available
+        self.viewActivityAvailability = QWidget()
+        self.viewActivityAvailability.layout = QHBoxLayout(self)
+        self.viewActivityAvailability.setLayout(self.viewActivityAvailability.layout)
+        self.viewActivityAvailabilityLabel = QLabel("Available?")
+        self.viewActivityAvailabilityCheckBox = QCheckBox()
+        self.viewActivityAvailability.layout.addWidget(self.viewActivityAvailabilityLabel)
+        self.viewActivityAvailability.layout.addWidget(self.viewActivityAvailabilityCheckBox)
+
+        #Levels
+        self.viewActivityLevels = QWidget()
+        self.viewActivityLevels.layout = QHBoxLayout(self)
+        self.viewActivityLevels.setLayout(self.viewActivityLevels.layout)
+        self.viewLevelsLabel = QLabel("Levels:")
+        self.viewLevelsCheckBoxBeginnerLabel = QLabel("Beginner:")
+        self.viewLevelsCheckBoxBeginner = QCheckBox()
+        self.viewLevelsCheckBoxBeginner.setChecked(True)
+        self.viewLevelsCheckBoxIntermediateLabel = QLabel("Intermediate:")      
+        self.viewLevelsCheckBoxIntermediate = QCheckBox()
+        self.viewLevelsCheckBoxIntermediate.setChecked(True)
+        self.viewLevelsCheckBoxAdvancedLabel = QLabel("Advanced:")              
+        self.viewLevelsCheckBoxAdvanced = QCheckBox()
+        self.viewLevelsCheckBoxAdvanced.setChecked(True)
+        self.viewActivityLevels.layout.addWidget(self.viewLevelsLabel)  
+        self.viewActivityLevels.layout.addWidget(self.viewLevelsCheckBoxBeginnerLabel)
+        self.viewActivityLevels.layout.addWidget(self.viewLevelsCheckBoxBeginner)
+        self.viewActivityLevels.layout.addWidget(self.viewLevelsCheckBoxIntermediateLabel)
+        self.viewActivityLevels.layout.addWidget(self.viewLevelsCheckBoxIntermediate)
+        self.viewActivityLevels.layout.addWidget(self.viewLevelsCheckBoxAdvancedLabel)
+        self.viewActivityLevels.layout.addWidget(self.viewLevelsCheckBoxAdvanced)
+
+        #Days
+        self.viewActivityDays= QWidget()
+        self.viewActivityDays.layout = QHBoxLayout(self)
+        self.viewActivityDays.setLayout(self.viewActivityDays.layout)
+        self.viewDaysLabel = QLabel("Days:")
+        self.viewDaysCheckBoxMondayLabel = QLabel("Monday:")
+        self.viewDaysCheckBoxMonday = QCheckBox()
+        self.viewDaysCheckBoxMonday.setChecked(True)
+        self.viewDaysCheckBoxTuesdayLabel = QLabel("Tuesday:")      
+        self.viewDaysCheckBoxTuesday = QCheckBox()
+        self.viewDaysCheckBoxTuesday.setChecked(True)
+        self.viewDaysCheckBoxWednesdayLabel = QLabel("Wednesday:")              
+        self.viewDaysCheckBoxWednesday = QCheckBox()
+        self.viewDaysCheckBoxWednesday.setChecked(True)
+        self.viewDaysCheckBoxThursdayLabel = QLabel("Thursday:")              
+        self.viewDaysCheckBoxThursday = QCheckBox()
+        self.viewDaysCheckBoxThursday.setChecked(True)
+        self.viewDaysCheckBoxFridayLabel = QLabel("Friday:")              
+        self.viewDaysCheckBoxFriday = QCheckBox()
+        self.viewDaysCheckBoxFriday.setChecked(True)
+        self.viewActivityDays.layout.addWidget(self.viewDaysLabel)  
+        self.viewActivityDays.layout.addWidget(self.viewDaysCheckBoxMondayLabel)
+        self.viewActivityDays.layout.addWidget(self.viewDaysCheckBoxMonday)
+        self.viewActivityDays.layout.addWidget(self.viewDaysCheckBoxTuesdayLabel)
+        self.viewActivityDays.layout.addWidget(self.viewDaysCheckBoxTuesday)
+        self.viewActivityDays.layout.addWidget(self.viewDaysCheckBoxWednesdayLabel)
+        self.viewActivityDays.layout.addWidget(self.viewDaysCheckBoxWednesday)
+        self.viewActivityDays.layout.addWidget(self.viewDaysCheckBoxThursdayLabel)
+        self.viewActivityDays.layout.addWidget(self.viewDaysCheckBoxThursday)
+        self.viewActivityDays.layout.addWidget(self.viewDaysCheckBoxFridayLabel)
+        self.viewActivityDays.layout.addWidget(self.viewDaysCheckBoxFriday)
 
         #View Activities Widgets
         self.viewActivitiesTab.layout.addWidget(self.viewActivitiesTitle)
         self.viewActivitiesTab.layout.addWidget(self.viewActivityName)
+        self.viewActivitiesTab.layout.addWidget(self.viewActivityAvailability)
+        self.viewActivitiesTab.layout.addWidget(self.viewActivityLevels)
+        self.viewActivitiesTab.layout.addWidget(self.viewActivityDays)
         self.viewActivityNameEntryBox.textChanged.connect(self.updateActivityData)
-
+        self.viewActivityAvailabilityCheckBox.stateChanged.connect(self.updateActivityData)
+        self.viewLevelsCheckBoxBeginner.stateChanged.connect(self.updateActivityData)
+        self.viewLevelsCheckBoxIntermediate.stateChanged.connect(self.updateActivityData)
+        self.viewLevelsCheckBoxAdvanced.stateChanged.connect(self.updateActivityData)        
+        self.viewDaysCheckBoxMonday.stateChanged.connect(self.updateActivityData)
+        self.viewDaysCheckBoxTuesday.stateChanged.connect(self.updateActivityData)
+        self.viewDaysCheckBoxWednesday.stateChanged.connect(self.updateActivityData)
+        self.viewDaysCheckBoxThursday.stateChanged.connect(self.updateActivityData)
+        self.viewDaysCheckBoxFriday.stateChanged.connect(self.updateActivityData)
         self.updateActivityData()
 
 
@@ -374,7 +446,27 @@ class MyTableWidget(QWidget):
         self.viewActivitiesTab.layout.removeWidget(self.activityTable)
         self.activityTable.deleteLater()
         self.activityTable = QTableWidget()
-        self.data = activityDatabase.searchActivity(self.viewActivityNameEntryBox.text(),"","")
+        levels = ["****","****","****"]
+        if self.viewLevelsCheckBoxBeginner.isChecked():
+            levels[0] = "Beginner"
+        if self.viewLevelsCheckBoxIntermediate.isChecked():
+            levels[1] = "Intermediate"
+        if self.viewLevelsCheckBoxAdvanced.isChecked():
+            levels[2] = "Advanced"
+
+        days = ["****","****","****","****","****"]
+        if self.viewDaysCheckBoxMonday.isChecked():
+            days[0] = "Monday"
+        if self.viewDaysCheckBoxTuesday.isChecked():
+            days[1] = "Tuesday"
+        if self.viewDaysCheckBoxWednesday.isChecked():
+            days[2] = "Wednesday"
+        if self.viewDaysCheckBoxThursday.isChecked():
+            days[3] = "Thursday"
+        if self.viewDaysCheckBoxFriday.isChecked():
+            days[4] = "Friday"
+        
+        self.data = activityDatabase.searchActivity(self.viewActivityNameEntryBox.text(),self.viewActivityAvailabilityCheckBox.isChecked(),levels,days)
         if self.data:
             self.activityTable.setRowCount(len(self.data))
             self.activityTable.setColumnCount(len(self.data[0]))
@@ -386,7 +478,9 @@ class MyTableWidget(QWidget):
                     item = QTableWidgetItem(self.data[i][j])
                 item.setFlags(QtCore.Qt.ItemIsEnabled)
                 self.activityTable.setItem(i,j,item)
-        self.activityTable.setHorizontalHeaderLabels(["Name", "Size", "Spots Left", "Levels", "Day", "Start  Time", "End Time"])
+        self.activityTable.setHorizontalHeaderLabels(["Name", "Size", "Spots Left", "Levels", "Days", "Start  Time", "End Time"])
+        self.activityTable.horizontalHeader().setSectionResizeMode(3,QHeaderView.ResizeMode.ResizeToContents)
+        self.activityTable.horizontalHeader().setSectionResizeMode(4,QHeaderView.ResizeMode.ResizeToContents)
         self.viewActivitiesTab.layout.addWidget(self.activityTable)
 
         
